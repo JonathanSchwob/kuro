@@ -1,9 +1,11 @@
-// import { useState } from "react";
+import TodoList from "./components/TodoList/TodoList";
 
 function App() {
-  // const [count, setCount] = useState(0);
-
-  return <></>;
+  return (
+    <div className="min-h-screen bg-gray-100 flex justify-end items-start p-8">
+      <TodoList />
+    </div>
+  );
 }
 
 export default App;
