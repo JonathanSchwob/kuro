@@ -1,7 +1,18 @@
 import clsx from "clsx";
 import { TrashIcon } from "@heroicons/react/24/solid";
+import { Todo } from "../../store/todoStore";
 
-export default function TodoItem({ todo, toggleComplete, deleteTodo }) {
+interface TodoItemProps {
+  todo: Todo;
+  toggleComplete: (id: number) => void;
+  deleteTodo: (id: number) => void;
+}
+
+export default function TodoItem({
+  todo,
+  toggleComplete,
+  deleteTodo,
+}: TodoItemProps) {
   return (
     <li
       className={clsx(

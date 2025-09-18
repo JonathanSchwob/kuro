@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    // Environment
+    "target": "esnext",
+    "module": "esnext",
+    "lib": ["dom", "esnext"],
+
+    // Module Interop
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    // JSX
+    "jsx": "react-jsx",
+
+    // Type Checking
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noUncheckedSideEffectImports": true,
+    "skipLibCheck": true,
+
+    // Outputs
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+
+    // Optional paths for cleaner imports (if you use /src aliases)
+    "baseUrl": "./src"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}

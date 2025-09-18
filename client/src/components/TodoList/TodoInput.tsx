@@ -1,13 +1,22 @@
-import { useState } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
 
-export default function TodoInput({ addTodo }) {
-  const [newTodo, setNewTodo] = useState("");
+interface TodoInputProps {
+  addTodo: (text: string) => void;
+}
 
-  const handleSubmit = (e) => {
+export default function TodoInput({ addTodo }: TodoInputProps) {
+  const [newTodo, setNewTodo] = useState<string>("");
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (newTodo.trim() === "") return;
-    addTodo(newTodo.trim());
+    const trimmed = newTodo.trim();
+    if (!trimmed) return;
+    addTodo(trimmed);
     setNewTodo("");
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setNewTodo(e.target.value);
   };
 
   return (
@@ -15,7 +24,7 @@ export default function TodoInput({ addTodo }) {
       <input
         type="text"
         value={newTodo}
-        onChange={(e) => setNewTodo(e.target.value)}
+        onChange={handleChange}
         className="flex-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white shadow-sm placeholder-gray-400 placeholder:italic"
         placeholder="Add a todo..."
       />
