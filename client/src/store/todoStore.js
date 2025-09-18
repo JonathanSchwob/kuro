@@ -1,8 +1,7 @@
 import { create } from "zustand";
 
-// <-- NEW: central store for todos
 export const useTodoStore = create((set) => ({
-  todos: [],
+  todos: [{ id: 0, text: "learn react", completed: false, completedAt: null }],
 
   addTodo: (text) =>
     set((state) => ({
