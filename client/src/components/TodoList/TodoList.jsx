@@ -1,9 +1,15 @@
 import TodoInput from "./TodoInput";
 import TodoItem from "./TodoItem";
 import { useTodoStore } from "../../store/todoStore";
+import { useEffect } from "react";
 
 export default function TodoList() {
-  const { todos, addTodo, toggleTodoComplete, deleteTodo } = useTodoStore();
+  const { todos, addTodo, toggleTodoComplete, deleteTodo, pruneCompleted } =
+    useTodoStore();
+
+  useEffect(() => {
+    pruneCompleted(); // move old completed todos into completedHistory on mount
+  }, [pruneCompleted]);
 
   return (
     <div className="bg-white p-6 rounded-2xl shadow-md w-full max-w-md">

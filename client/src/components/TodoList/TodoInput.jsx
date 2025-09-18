@@ -6,7 +6,7 @@ export default function TodoInput({ addTodo }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (newTodo.trim() === "") return;
-    addTodo(newTodo);
+    addTodo(newTodo.trim());
     setNewTodo("");
   };
 
