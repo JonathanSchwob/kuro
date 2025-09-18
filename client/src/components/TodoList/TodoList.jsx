@@ -3,7 +3,7 @@ import TodoItem from "./TodoItem";
 import { useTodoStore } from "../../store/todoStore";
 
 export default function TodoList() {
-  const { todos, addTodo, toggleComplete, deleteTodo } = useTodoStore();
+  const { todos, addTodo, toggleTodoComplete, deleteTodo } = useTodoStore();
 
   return (
     <div className="bg-white p-6 rounded-2xl shadow-md w-full max-w-md">
@@ -14,7 +14,7 @@ export default function TodoList() {
           <TodoItem
             key={todo.id}
             todo={todo}
-            toggleComplete={toggleComplete}
+            toggleComplete={toggleTodoComplete}
             deleteTodo={deleteTodo}
           />
         ))}
