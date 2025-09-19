@@ -2,19 +2,10 @@ import TodoInput from "./TodoInput";
 import TodoItem from "./TodoItem";
 import { useTodoStore } from "../../store/todoStore";
 import { useEffect } from "react";
+import dayjs from "dayjs";
 
 function msUntilNextMidnight() {
-  const now = new Date();
-  const nextMidnight = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate() + 1,
-    0,
-    0,
-    0,
-    0
-  );
-  return nextMidnight.getTime() - now.getTime();
+  return dayjs().endOf("day").add(1, "millisecond").diff(dayjs());
 }
 
 export default function TodoList() {

@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
+import dayjs from "dayjs";
 
 export interface Todo {
   id: number;
@@ -26,26 +27,26 @@ export const useTodoStore = create<TodoStore>()(
         id: 200,
         text: "old completed todo",
         completed: true,
-        completedAt: Date.now() - 1000 * 60 * 60 * 1, // 30 hours ago
+        completedAt: dayjs().subtract(2, "hour").valueOf(),
       },
     ],
     completedHistory: [
       {
         id: 101,
         text: "buy groceries",
-        completedAt: Date.now() - 1000 * 60 * 60 * 30,
+        completedAt: dayjs().subtract(30, "hour").valueOf(),
         completed: true,
       },
       {
         id: 102,
         text: "walk the dog",
-        completedAt: Date.now() - 1000 * 60 * 60 * 48,
+        completedAt: dayjs().subtract(48, "hour").valueOf(),
         completed: true,
       },
       {
         id: 103,
         text: "read a book",
-        completedAt: Date.now() - 1000 * 60 * 60 * 72,
+        completedAt: dayjs().subtract(72, "hour").valueOf(),
         completed: true,
       },
     ],
@@ -92,16 +93,14 @@ export const useTodoStore = create<TodoStore>()(
     },
 
     pruneCompleted: () => {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0); // today at midnight
-
+      const todayStart = dayjs().startOf("day");
       const todos = get().todos;
 
       const toPrune = todos.filter(
         (todo) =>
           todo.completed &&
           todo.completedAt !== null &&
-          new Date(todo.completedAt) < today
+          dayjs(todo.completedAt).isBefore(todayStart)
       );
 
       const remainingTodos = todos.filter((todo) => !toPrune.includes(todo));
