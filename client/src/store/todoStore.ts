@@ -12,6 +12,7 @@ interface TodoStore {
   todos: Todo[];
   completedHistory: Todo[];
   addTodo: (text: string) => void;
+  editTodo: (id: number, newText: string) => void;
   toggleTodoComplete: (id: number) => void;
   deleteTodo: (id: number) => void;
   pruneCompleted: () => void;
@@ -60,6 +61,22 @@ export const useTodoStore = create<TodoStore>()(
       set({ todos: [...get().todos, newTodo] });
     },
 
+    editTodo: (id: number, newText: string) =>
+      set(
+        (state) => {
+          const updatedTodos = state.todos.map((todo) =>
+            todo.id === id ? { ...todo, text: newText } : todo
+          );
+          return { todos: updatedTodos };
+        },
+        false,
+        "editTodo"
+      ),
+
+    deleteTodo: (id: number) => {
+      set({ todos: get().todos.filter((todo) => todo.id !== id) });
+    },
+
     toggleTodoComplete: (id: number) => {
       set({
         todos: get().todos.map((todo) =>
@@ -72,10 +89,6 @@ export const useTodoStore = create<TodoStore>()(
             : todo
         ),
       });
-    },
-
-    deleteTodo: (id: number) => {
-      set({ todos: get().todos.filter((todo) => todo.id !== id) });
     },
 
     pruneCompleted: () => {

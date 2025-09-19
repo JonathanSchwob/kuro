@@ -1,18 +1,15 @@
 import clsx from "clsx";
-import { TrashIcon } from "@heroicons/react/24/outline";
-import { Todo } from "../../store/todoStore";
+import { TrashIcon } from "@heroicons/react/24/solid";
+import { Todo, useTodoStore } from "../../store/todoStore";
+import EditableText from "./EditableText";
 
 interface TodoItemProps {
   todo: Todo;
-  toggleComplete: (id: number) => void;
-  deleteTodo: (id: number) => void;
 }
 
-export default function TodoItem({
-  todo,
-  toggleComplete,
-  deleteTodo,
-}: TodoItemProps) {
+export default function TodoItem({ todo }: TodoItemProps) {
+  const { toggleTodoComplete, deleteTodo, editTodo } = useTodoStore();
+
   return (
     <li
       className={clsx(
@@ -20,11 +17,12 @@ export default function TodoItem({
         "hover:bg-blue-100",
         todo.completed ? "line-through text-gray-400 bg-gray-100" : "bg-gray-50"
       )}
-      onClick={() => toggleComplete(todo.id)}
+      onClick={() => toggleTodoComplete(todo.id)}
     >
-      <span className="truncate" title={todo.text}>
-        {todo.text}
-      </span>
+      <EditableText
+        text={todo.text}
+        onSave={(newText) => editTodo(todo.id, newText)}
+      />
 
       <button
         className="opacity-0 group-hover:opacity-100 transition-opacity duration-150 cursor-pointer hover:scale-110"
