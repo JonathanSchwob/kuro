@@ -26,7 +26,7 @@ export default function TodoInput({ addTodo }: TodoInputProps) {
         value={newTodo}
         onChange={handleChange}
         className="flex-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white shadow-sm placeholder-gray-400 placeholder:italic"
-        placeholder="Add a todo..."
+        placeholder="Add a task..."
       />
       <button
         type="submit"
