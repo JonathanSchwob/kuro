@@ -13,9 +13,9 @@ export default function TodoItem({ todo }: TodoItemProps) {
   return (
     <li
       className={clsx(
-        "p-3 border border-gray-200 rounded-2xl cursor-pointer shadow-sm flex justify-between items-center group truncate max-w-full",
+        "p-3 border border-gray-200 rounded-2xl flex justify-between items-center group truncate max-w-full",
         "hover:bg-blue-100",
-        todo.completed ? "line-through text-gray-400 bg-gray-100" : "bg-gray-50"
+        todo.completed ? "line-through text-gray-400 bg-gray-100" : "bg-white"
       )}
       onClick={() => toggleTodoComplete(todo.id)}
     >

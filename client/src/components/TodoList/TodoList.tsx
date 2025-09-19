@@ -3,12 +3,40 @@ import TodoItem from "./TodoItem";
 import { useTodoStore } from "../../store/todoStore";
 import { useEffect } from "react";
 
+function msUntilNextMidnight() {
+  const now = new Date();
+  const nextMidnight = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() + 1,
+    0,
+    0,
+    0,
+    0
+  );
+  return nextMidnight.getTime() - now.getTime();
+}
+
 export default function TodoList() {
   const { todos, addTodo, toggleTodoComplete, deleteTodo, pruneCompleted } =
     useTodoStore();
 
   useEffect(() => {
-    pruneCompleted(); // move old completed todos into completedHistory on mount
+    // Immediate prune on mount
+    pruneCompleted();
+
+    // Schedule daily pruning at midnight
+    const schedulePrune = () => {
+      const timeout = setTimeout(() => {
+        pruneCompleted();
+        schedulePrune(); // schedule next day
+      }, msUntilNextMidnight());
+
+      return () => clearTimeout(timeout);
+    };
+
+    const cleanup = schedulePrune();
+    return cleanup;
   }, [pruneCompleted]);
 
   return (
@@ -17,12 +45,7 @@ export default function TodoList() {
       <TodoInput addTodo={addTodo} />
       <ul className="space-y-2">
         {todos.map((todo) => (
-          <TodoItem
-            key={todo.id}
-            todo={todo}
-            toggleComplete={toggleTodoComplete}
-            deleteTodo={deleteTodo}
-          />
+          <TodoItem key={todo.id} todo={todo} />
         ))}
       </ul>
     </div>

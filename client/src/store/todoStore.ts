@@ -26,56 +26,52 @@ export const useTodoStore = create<TodoStore>()(
         id: 200,
         text: "old completed todo",
         completed: true,
-        completedAt: Date.now() - 1000 * 60 * 60 * 30, // 30 hours ago
+        completedAt: Date.now() - 1000 * 60 * 60 * 1, // 30 hours ago
       },
     ],
     completedHistory: [
       {
         id: 101,
         text: "buy groceries",
-        completedAt: Date.now() - 1000 * 60 * 60 * 30, // 30 hours ago
+        completedAt: Date.now() - 1000 * 60 * 60 * 30,
         completed: true,
       },
       {
         id: 102,
         text: "walk the dog",
-        completedAt: Date.now() - 1000 * 60 * 60 * 48, // 48 hours ago
+        completedAt: Date.now() - 1000 * 60 * 60 * 48,
         completed: true,
       },
       {
         id: 103,
         text: "read a book",
-        completedAt: Date.now() - 1000 * 60 * 60 * 72, // 72 hours ago
+        completedAt: Date.now() - 1000 * 60 * 60 * 72,
         completed: true,
       },
     ],
 
     addTodo: (text: string) => {
+      const trimmed = text.trim();
+      if (!trimmed) return;
       const newTodo: Todo = {
         id: Date.now(),
-        text: text.trim(),
+        text: trimmed,
         completed: false,
         completedAt: null,
       };
-      if (!newTodo.text) return;
       set({ todos: [...get().todos, newTodo] });
     },
 
     editTodo: (id: number, newText: string) =>
       set(
-        (state) => {
-          const updatedTodos = state.todos.map((todo) =>
+        (state) => ({
+          todos: state.todos.map((todo) =>
             todo.id === id ? { ...todo, text: newText } : todo
-          );
-          return { todos: updatedTodos };
-        },
+          ),
+        }),
         false,
         "editTodo"
       ),
-
-    deleteTodo: (id: number) => {
-      set({ todos: get().todos.filter((todo) => todo.id !== id) });
-    },
 
     toggleTodoComplete: (id: number) => {
       set({
@@ -91,26 +87,26 @@ export const useTodoStore = create<TodoStore>()(
       });
     },
 
+    deleteTodo: (id: number) => {
+      set({ todos: get().todos.filter((todo) => todo.id !== id) });
+    },
+
     pruneCompleted: () => {
-      const now = Date.now();
-      const cutoff = now - 1000 * 60 * 60 * 24; // 24 hours ago
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // today at midnight
 
-      const toPrune = get().todos.filter(
+      const todos = get().todos;
+
+      const toPrune = todos.filter(
         (todo) =>
-          todo.completed && todo.completedAt && todo.completedAt <= cutoff
+          todo.completed &&
+          todo.completedAt !== null &&
+          new Date(todo.completedAt) < today
       );
 
-      const remainingTodos = get().todos.filter(
-        (todo) =>
-          !(todo.completed && todo.completedAt && todo.completedAt <= cutoff)
-      );
+      const remainingTodos = todos.filter((todo) => !toPrune.includes(todo));
 
-      const newHistory = [
-        ...get().completedHistory,
-        ...toPrune.map((todo) => ({
-          ...todo,
-        })),
-      ];
+      const newHistory = [...get().completedHistory, ...toPrune];
 
       set({ todos: remainingTodos, completedHistory: newHistory });
     },

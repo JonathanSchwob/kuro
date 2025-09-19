@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, KeyboardEvent, FocusEvent } from "react";
 
 interface EditableTextProps {
   text: string;
@@ -9,30 +9,42 @@ export default function EditableText({ text, onSave }: EditableTextProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(text);
 
-  const save = () => {
+  const saveEdit = () => {
     const trimmed = editText.trim();
     if (trimmed && trimmed !== text) onSave(trimmed);
     setIsEditing(false);
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") saveEdit();
+    if (e.key === "Escape") {
+      setEditText(text);
+      setIsEditing(false);
+    }
+  };
+
+  const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
+    saveEdit();
   };
 
   return isEditing ? (
     <input
       value={editText}
       onChange={(e) => setEditText(e.target.value)}
-      onBlur={save}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") save();
-        if (e.key === "Escape") {
-          setEditText(text);
-          setIsEditing(false);
-        }
-      }}
+      onKeyDown={handleKeyDown}
+      onBlur={handleBlur}
       autoFocus
-      onFocus={(e) => e.target.select()}
-      className="w-full px-2 py-1 rounded focus:outline-none"
+      className="w-full px-2 py-1 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
     />
   ) : (
-    <span className="truncate" onDoubleClick={() => setIsEditing(true)}>
+    <span
+      className="truncate"
+      title={text}
+      onDoubleClick={(e) => {
+        e.stopPropagation();
+        setIsEditing(true);
+      }}
+    >
       {text}
     </span>
   );
